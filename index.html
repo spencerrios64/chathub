@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>chathub</title><style>
+:root{--bg:#0f1117;--card:#181b24;--bd:#2a2f3d;--tx:#e6e8ee;--mut:#8b92a6;--ac:#7c9cff}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--tx)}
+main{max-width:1040px;margin:0 auto;padding:28px 16px 70px}h1{margin:.1em 0}.sub{color:var(--mut);margin-top:0}
+input{font:inherit;color:var(--tx);background:#10131b;border:1px solid var(--bd);border-radius:8px;padding:9px 12px;width:100%}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:16px 0;color:var(--mut);font-size:13px}.flow b{color:var(--tx);background:#222736;border-radius:99px;padding:3px 12px;font-weight:600}
+h2{margin:26px 0 8px;font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:17px}.card p{margin:0;color:var(--mut);font-size:14px;flex:1}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+a.btn{background:var(--ac);color:#0b0e16;text-decoration:none;font-weight:600;border-radius:8px;padding:6px 12px;font-size:14px}a.sec{background:#222736;color:var(--tx)}
+code{background:#10131b;border:1px solid var(--bd);border-radius:6px;padding:1px 6px;font-size:13px}
+.tag{font-size:11px;color:var(--mut);border:1px solid var(--bd);border-radius:99px;padding:0 8px;align-self:flex-start}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:14px 0}
+.hide{display:none}
+</style></head><body><main>
+<h1>chathub</h1>
+<p class="sub">All my AI chat tools in one place. Everything runs on your own machine: nothing is uploaded, and every page works offline on Windows.</p>
+<div class="flow"><b>Export</b>→<b>Collect</b>→<b>Clean</b>→<b>Understand</b>→<b>Reuse</b>→<b>Use</b>→<b>Train</b></div>
+<input id="q" placeholder="Search tools…" autofocus>
+<div id="where" class="box"></div>
+<div id="app"></div>
+<div class="box"><b>Install everything on Windows</b><p class="sub" style="margin:6px 0">Paste this in PowerShell once. It downloads every tool into <code>%USERPROFILE%\ChatHub</code>, adds a desktop shortcut and opens this page offline. Run it again any time to update.</p>
+<code id="cmd" style="display:block;padding:8px;overflow:auto">powershell -ExecutionPolicy Bypass -c "iwr https://raw.githubusercontent.com/spencerrios64/chathub/main/install.ps1 -UseBasicParsing | iex"</code></div>
+<script>
+const T=[
+ ["Collect","chatzip","Turn your Claude, ChatGPT, Gemini, Grok and DeepSeek exports into one zip: a folder per AI, a text file per chat.","web"],
+ ["Collect","chatvault","Local-first, incremental archive of your Claude and ChatGPT chats in SQLite, with search and JSONL export.","py","python chatvault.py --help"],
+ ["Clean","chatscrub","Remove API keys, emails, phone numbers and other private details before you share or archive chats.","web"],
+ ["Clean","chatdedupe","Find duplicate and near-duplicate chats and export a clean set.","web"],
+ ["Understand","chatstats","See how much you use each AI: chats, messages, rough tokens, busiest months, topics.","web"],
+ ["Understand","chatsearch","Search every chat you ever had in one place, ranked.","web"],
+ ["Understand","chatgraph","Turn chats into a knowledge graph and export an Obsidian vault.","web"],
+ ["Understand","chatbrief","Make a short context pack from old chats to paste into any AI and carry on.","web"],
+ ["Reuse","promptbank","Pull the prompts that worked out of your history into a searchable, taggable library.","web"],
+ ["Use","chatrelay","One chat, several AIs: when one hits its limit, the next continues with the whole conversation.","web"],
+ ["Use","chatcompare","Ask several AIs the same question and read the answers side by side.","web"],
+ ["Use","chatevals","Log which AI answered best and see win rates per topic.","web"],
+ ["All-in-one","chatpipeline","Scrub, dedupe, count and zip your chats in one flow.","web"],
+ ["Train","chattrainer","Fine-tune a local LLM on your own chats. Includes the ai-dataset command for Claude/ChatGPT exports.","py","run.bat (or install.bat first)"]
+];
+const local=location.protocol==='file:';
+$=s=>document.querySelector(s);
+$('#where').innerHTML=local?'You are running the <b>offline copy</b>. Every button below opens the tool from this folder.':'You are on the <b>hosted page</b>. For a fully offline Windows copy, use the installer at the bottom.';
+function render(){const q=$('#q').value.toLowerCase();const groups={};
+ T.filter(t=>!q||(t[1]+t[2]+t[0]).toLowerCase().includes(q)).forEach(t=>(groups[t[0]]=groups[t[0]]||[]).push(t));
+ $('#app').innerHTML=Object.entries(groups).map(([g,l])=>'<h2>'+g+'</h2><div class="grid">'+l.map(t=>{const n=t[1];
+  const open=t[3]==='web'?'<a class="btn" href="'+(local?'./'+n+'/index.html':'https://spencerrios64.github.io/'+n+'/')+'">Open</a>':(local?'<a class="btn" href="./'+n+'/">Open folder</a>':'');
+  return '<div class="card"><h3>'+n+'</h3><span class="tag">'+(t[3]==='web'?'runs in browser, offline':'Python, runs locally')+'</span><p>'+t[2]+'</p>'+(t[4]?'<p>Run: <code>'+t[4]+'</code></p>':'')+'<div class="row">'+open+'<a class="btn sec" href="https://github.com/spencerrios64/'+n+'">GitHub</a></div></div>'}).join('')+'</div>').join('')||'<p class="sub">Nothing matches.</p>';}
+$('#q').oninput=render;render();
+</script></main></body></html>
