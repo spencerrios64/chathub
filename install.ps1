@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $owner = 'spencerrios64'
-$tools = 'chatzip','chatvault','chatscrub','chatdedupe','chatstats','chatsearch','chatgraph','chatbrief','promptbank','chatrelay','chatcompare','chatevals','chatpipeline','chattrainer'
+$tools = 'chatzip','chatvault','chatscrub','chatdedupe','chatstats','chatsearch','chatgraph','chatbrief','promptbank','chatrelay','chatbridge','chatcompare','chatevals','chatpipeline','chattrainer'
 $dest = Join-Path $env:USERPROFILE 'ChatHub'
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 
