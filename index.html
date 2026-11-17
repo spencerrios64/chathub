@@ -46,7 +46,7 @@ $('#where').innerHTML=local?'You are running the <b>offline copy</b>. Every butt
 function render(){const q=$('#q').value.toLowerCase();const groups={};
  T.filter(t=>!q||(t[1]+t[2]+t[0]).toLowerCase().includes(q)).forEach(t=>(groups[t[0]]=groups[t[0]]||[]).push(t));
  $('#app').innerHTML=Object.entries(groups).map(([g,l])=>'<h2>'+g+'</h2><div class="grid">'+l.map(t=>{const n=t[1];
-  const open=t[3]==='web'?'<a class="btn" href="'+(local?'./'+n+'/index.html':'https://spencerrios64.github.io/'+n+'/')+'">Open</a>':(local?'<a class="btn" href="./'+n+'/">Open folder</a>':'');
+  const open=t[3]==='web'?'<a class="btn" href="'+(local?'./'+n+'/index.html#hub':'https://spencerrios64.github.io/'+n+'/#hub')+'">Open</a>':(local?'<a class="btn" href="./'+n+'/">Open folder</a>':'');
   return '<div class="card"><h3>'+n+'</h3><span class="tag">'+(t[3]==='web'?'runs in browser, offline':'Python, runs locally')+'</span><p>'+t[2]+'</p>'+(t[4]?'<p>Run: <code>'+t[4]+'</code></p>':'')+'<div class="row">'+open+'<a class="btn sec" href="https://github.com/spencerrios64/'+n+'">GitHub</a></div></div>'}).join('')+'</div>').join('')||'<p class="sub">Nothing matches.</p>';}
 $('#q').oninput=render;render();
 </script></main></body></html>
