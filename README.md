@@ -38,3 +38,12 @@ It downloads every tool into `%USERPROFILE%\ChatHub`, adds a ChatHub shortcut on
 Export your chats, then `chatzip` or `chatpipeline` to collect and clean them. `chatvault` keeps a permanent archive. `chatsearch`, `chatgraph`, `chatstats` and `chatbrief` help you understand and reuse them, `chatrelay`, `chatcompare` and `chatevals` help you use several AIs, and `chattrainer ai-dataset` turns the good chats into training data.
 
 Nothing is uploaded anywhere. Browser tools run entirely on your machine, and the zip handling is built in, so they work with no internet.
+
+## How the tools talk to each other
+
+Every tool carries a small shared bar (source: [hubbar.js](hubbar.js)) at the bottom of the page.
+
+- **Shared chat store.** Any chat export you load into one tool is kept in a browser database called `chathub` (IndexedDB, nothing leaves your device). Open another tool and press **Load hub chats** to get the same files there with no re-uploading. **Save hub data** stores a tool's output back to the hub, and **Clear** empties it.
+- **One-click hand-off.** The **Open these chats in...** menu jumps to another tool with `#hub`, which auto-loads the shared chats on arrival. The Open links on this page do the same.
+- **Where it works.** On the hosted pages all tools share one origin, so it just works. Installed locally (`install.ps1`), it works when the tools are opened from `file://` in a Chromium browser (Edge or Chrome). Other browsers may keep a separate store per file.
+- **Navigation only.** chatrelay and chatcompare have no file input, so they only get the links.
